@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Users>
+    <User>
+        <userId>59</userId>
+        <enabled>true</enabled>
+        <name>Peter</name>
+        <email>abc@mail.ru</email>
+        <password>12345</password>
+        <registered>2017-10-11T00:00:00+03:00</registered>
+        <caloriesPerDay>2000</caloriesPerDay>
+    </User>
+    <User>
+        <userId>60</userId>
+        <enabled>true</enabled>
+        <name>Ivan</name>
+        <email>xyz@mail.ru</email>
+        <password>67890</password>
+        <registered>2017-10-11T00:00:00+03:00</registered>
+        <caloriesPerDay>2000</caloriesPerDay>
+    </User>
+    <User>
+        <userId>61</userId>
+        <enabled>true</enabled>
+        <name>Peter</name>
+        <email>abc@mail.ru</email>
+        <password>12345</password>
+        <registered>2017-10-16T00:00:00+03:00</registered>
+        <caloriesPerDay>2000</caloriesPerDay>
+    </User>
+    <User>
+        <userId>62</userId>
+        <enabled>true</enabled>
+        <name>Ivan</name>
+        <email>xyz@mail.ru</email>
+        <password>67890</password>
+        <registered>2017-10-16T00:00:00+03:00</registered>
+        <caloriesPerDay>2000</caloriesPerDay>
+    </User>
+</Users>

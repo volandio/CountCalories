@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>servlets.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/auth</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MealsServlet</servlet-name>
+        <servlet-class>servlets.MealsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MealsServlet</servlet-name>
+        <url-pattern>/meals</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>loginUsers</filter-name>
+        <filter-class>servlets.filters.LoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>loginUsers</filter-name>
+        <url-pattern>/meals</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>MealDeleteServlet</servlet-name>
+        <servlet-class>servlets.MealDeleteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MealDeleteServlet</servlet-name>
+        <url-pattern>/deleteMeal</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MealEditServlet</servlet-name>
+        <servlet-class>servlets.MealEditServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MealEditServlet</servlet-name>
+        <url-pattern>/editMeal</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MealCreateServlet</servlet-name>
+        <servlet-class>servlets.MealCreateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MealCreateServlet</servlet-name>
+        <url-pattern>/createMeal</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UserCreateServlet</servlet-name>
+        <servlet-class>servlets.CreateUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserCreateServlet</servlet-name>
+        <url-pattern>/createUser</url-pattern>
+    </servlet-mapping>
+</web-app>
