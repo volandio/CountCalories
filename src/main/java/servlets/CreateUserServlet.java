@@ -1,5 +1,7 @@
 package servlets;
 
+import DB.DAO.UserDAOImpl;
+import model.User;
 import services.RegistrationService;
 import services.RegistrationServiceImpl;
 
@@ -9,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static DB.DAO.UserDAOImpl.getAllUsers;
 
 public class CreateUserServlet extends HttpServlet {
     @Override
@@ -22,7 +26,19 @@ public class CreateUserServlet extends HttpServlet {
         RegistrationService registrationService = new RegistrationServiceImpl();
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
+        try {
+            for (User user : getAllUsers()) {
+                if (user.getEmail().equals(req.getParameter("email"))) {
+                    req.setAttribute("message", "Пользователь с таким Email уже зарегестрирован!");
+                    req.getRequestDispatcher("/createUser.jsp").forward(req, resp);
+                    this.destroy();
+                }
+            }
+        } catch (UserDAOImpl.UserDAOException e) {
+            e.printStackTrace();
+        }
         registrationService.regUser(req.getParameter("name"), req.getParameter("email"), req.getParameter("password"));
         resp.sendRedirect("/");
+
     }
 }

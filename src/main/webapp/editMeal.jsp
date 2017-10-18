@@ -10,7 +10,7 @@
         <tr>
             <td align="right">Время приема еды :</td>
             <td>
-                <input type="text" name="dateTime" value="${meal.dateTime}">
+                <input type="datetime-local" name="dateTime" value="${meal.dateTime}">
             </td>
         </tr>
         <tr>

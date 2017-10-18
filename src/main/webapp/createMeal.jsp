@@ -9,19 +9,19 @@
         <tr>
             <td align="right">Время приема еды :</td>
             <td>
-                <input type="text" name="dateTime">
+                <input type="datetime-local" required value="" name="dateTime">
             </td>
         </tr>
         <tr>
             <td align="right">Наименование приема еды :</td>
             <td>
-                <input type="text" name="description">
+                <input type="text" required value="" name="description">
             </td>
         </tr>
         <tr>
             <td align="right">Количество калорий в еде :</td>
             <td>
-                <input type="text" name="calories">
+                <input type="text" required value="" name="calories">
             </td>
         </tr>
         <tr>
