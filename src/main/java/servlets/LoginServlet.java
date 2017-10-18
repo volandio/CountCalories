@@ -25,7 +25,6 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("isAuth", true);
                 req.getRequestDispatcher("/meals").forward(req, resp);
 //                resp.sendRedirect("/meals");
-
             } else {
                 getServletContext().getRequestDispatcher("/").forward(req, resp);
             }

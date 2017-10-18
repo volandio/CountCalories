@@ -4,6 +4,8 @@ import DB.ConnectionManagerPostgreSQL;
 import DB.IConnectionManager;
 import model.Meal;
 import model.User;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,13 +20,16 @@ public class MealDao {
     }
 
     private static IConnectionManager manager;
+    private static final Logger logger = Logger.getLogger(MealDao.class);
 
     static {
         manager = ConnectionManagerPostgreSQL.getInstance();
+        PropertyConfigurator.configure("D:\\Project\\INNOPOLIS\\CountCalories\\src\\main\\resources\\log4j.properties");
     }
 
     public static List<Meal> getAllMeals() throws MealDAOException {
         List<Meal> mealsList = new ArrayList<>();
+        logger.debug("log for getAllMeals");
         try {
             Statement statement = manager.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT u.id id, name, email, password, registered, " +
@@ -51,7 +56,7 @@ public class MealDao {
                 mealsList.add(meal);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new MealDAOException();
         }
         return mealsList;
@@ -59,6 +64,7 @@ public class MealDao {
 
     public static List<Meal> getAllMealsByUser(User user) throws MealDAOException {
         List<Meal> mealsList = new ArrayList<>();
+        logger.debug("log for getAllMealsByUser");
         try {
             int userId = user.getUserId();
             Statement statement = manager.getConnection().createStatement();
@@ -83,6 +89,7 @@ public class MealDao {
 
     public static Meal getMealById(int id) throws MealDAOException {
         Meal meal = null;
+        logger.debug("log for getMealById");
         try {
             Statement statement = manager.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT u.id id, name, email, password, registered, " +
@@ -114,6 +121,7 @@ public class MealDao {
 
     public static Meal getMealByIdAndUser(User user, int id) throws MealDAOException {
         Meal meal = null;
+        logger.debug("log for getMealByIdAndUser");
         try {
             PreparedStatement statement = manager.getConnection().
                 prepareStatement("SELECT * FROM meals WHERE id = ?");
@@ -137,6 +145,7 @@ public class MealDao {
     }
 
     public static void updateMealById(Meal meal, int id) throws MealDAOException {
+        logger.debug("log for updateMealById");
         try {
             PreparedStatement statement = manager.getConnection().prepareStatement("UPDATE  meals SET date_time = ?," +
                 " description = ?, calories = ? WHERE id = " + id);
@@ -151,6 +160,7 @@ public class MealDao {
     }
 
     public static void updateAllMeals(List<Meal> mealsList) throws MealDAOException {
+        logger.debug("log for updateAllMeals");
         try {
             PreparedStatement statement = manager.getConnection().prepareStatement("UPDATE  meals SET user_id = ?" +
                 ", date_time = ?, description = ?, calories = ? WHERE id = ?");
@@ -170,6 +180,7 @@ public class MealDao {
     }
 
     public static void deleteMealById(int id) throws MealDAOException {
+        logger.debug("log for deleteMealById");
         try {
             Statement statement = manager.getConnection().createStatement();
             statement.executeUpdate("DELETE FROM meals WHERE id = " + id);
@@ -180,6 +191,7 @@ public class MealDao {
     }
 
     public static void insertMeal(Meal meal) throws MealDAOException {
+        logger.debug("log for insertMeal");
         try {
             PreparedStatement statement =
                 manager.getConnection().prepareStatement("INSERT INTO meals (user_id, date_time, description, " +
@@ -196,6 +208,7 @@ public class MealDao {
     }
 
     public static void insertAllMeals(List<Meal> mealsList) throws MealDAOException {
+        logger.debug("log for insertAllMeals");
         try {
             PreparedStatement statement =
                 manager.getConnection().prepareStatement("INSERT INTO meals (user_id, date_time, description, " +

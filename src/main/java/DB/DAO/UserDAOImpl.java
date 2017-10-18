@@ -3,6 +3,8 @@ package DB.DAO;
 import DB.ConnectionManagerPostgreSQL;
 import DB.IConnectionManager;
 import model.User;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,13 +15,16 @@ public class UserDAOImpl implements UserDAO {
     }
 
     private static IConnectionManager manager;
+    private static final Logger logger = Logger.getLogger(MealDao.class);
 
     static {
         manager = ConnectionManagerPostgreSQL.getInstance();
+        PropertyConfigurator.configure("D:\\Project\\INNOPOLIS\\CountCalories\\src\\main\\resources\\log4j.properties");
     }
 
     public static List<User> getAllUsers() throws UserDAOException {
         List<User> usersList = new ArrayList<>();
+        logger.debug("log for getAllUsers");
         try {
             Statement statement = manager.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
@@ -35,7 +40,7 @@ public class UserDAOImpl implements UserDAO {
                 usersList.add(user);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new UserDAOException();
         }
         return usersList;
@@ -44,6 +49,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getUserByLoginAndPassword(String email, String password) throws UserDAOException {
         User user = null;
+        logger.debug("log for getUserByLoginAndPassword");
         try {
             PreparedStatement statement = manager.getConnection().
                 prepareStatement("SELECT * FROM users WHERE email = ? AND  password = ?");
@@ -61,7 +67,7 @@ public class UserDAOImpl implements UserDAO {
                 user.setUserId(resultSet.getInt("id"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new UserDAOException();
         }
         return user;
@@ -69,6 +75,7 @@ public class UserDAOImpl implements UserDAO {
 
     public User getUserByEmail(String email) throws UserDAOException {
         User user = null;
+        logger.debug("log for getUserByEmail");
         try {
             PreparedStatement statement = manager.getConnection().
                 prepareStatement("SELECT * FROM users WHERE email = ?");
@@ -85,7 +92,7 @@ public class UserDAOImpl implements UserDAO {
                 user.setUserId(resultSet.getInt("id"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new UserDAOException();
         }
         return user;
@@ -93,17 +100,19 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public Boolean createUser(User user) {
+        logger.debug("log for createUser");
         try {
             insertUser(user);
             return true;
         } catch (UserDAOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return false;
     }
 
     public static User getUserById(int id) throws UserDAOException {
         User user = null;
+        logger.debug("log for getUserById");
         try {
             Statement statement = manager.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM users WHERE id = " + id);
@@ -116,13 +125,14 @@ public class UserDAOImpl implements UserDAO {
                 resultSet.getInt("calories_per_day"));
             user.setUserId(resultSet.getInt("id"));
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new UserDAOException();
         }
         return user;
     }
 
     public static User updateUserById(User user, int id) throws UserDAOException {
+        logger.debug("log for updateUserById");
         try {
             PreparedStatement statement = manager.getConnection().prepareStatement("UPDATE  users SET name = ?" +
                 ", email = ?, password = ?, registered = ?, enabled = ?, calories_per_day = ? WHERE id = ?");
@@ -135,13 +145,14 @@ public class UserDAOImpl implements UserDAO {
             statement.setInt(7, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new UserDAOException();
         }
         return user;
     }
 
     public static void updateAllUsers(List<User> usersList) throws UserDAOException {
+        logger.debug("log for updateAllUsers");
         try {
             PreparedStatement statement = manager.getConnection().prepareStatement("UPDATE  users SET name = ?" +
                 ", email = ?, password = ?, registered = ?, enabled = ?, calories_per_day = ? WHERE id = ?");
@@ -157,22 +168,24 @@ public class UserDAOImpl implements UserDAO {
             }
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new UserDAOException();
         }
     }
 
     public static void deleteUser(int id) throws UserDAOException {
+        logger.debug("log for deleteUser");
         try {
             Statement statement = manager.getConnection().createStatement();
             statement.executeUpdate("DELETE FROM users WHERE id = " + id);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new UserDAOException();
         }
     }
 
     public static void insertUser(User user) throws UserDAOException {
+        logger.debug("log for insertUser");
         try {
             PreparedStatement statement =
                 manager.getConnection().prepareStatement("INSERT INTO users (name, email, password, " +
@@ -185,12 +198,13 @@ public class UserDAOImpl implements UserDAO {
             statement.setInt(6, user.getCaloriesPerDay());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new UserDAOException();
         }
     }
 
     public static void insertAllUsers(List<User> usersList) throws UserDAOException {
+        logger.debug("log for insertAllUsers");
         try {
             PreparedStatement statement =
                 manager.getConnection().prepareStatement("INSERT INTO users (name, email, password, " +
@@ -206,7 +220,7 @@ public class UserDAOImpl implements UserDAO {
             }
             statement.executeBatch();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new UserDAOException();
         }
     }
