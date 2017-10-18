@@ -20,8 +20,8 @@ public class CreateUserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RegistrationService registrationService = new RegistrationServiceImpl();
-        req.setCharacterEncoding("cp1251");
-        resp.setCharacterEncoding("cp1251");
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
         registrationService.regUser(req.getParameter("name"), req.getParameter("email"), req.getParameter("password"));
         resp.sendRedirect("/");
     }

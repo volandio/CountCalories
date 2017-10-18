@@ -20,6 +20,8 @@ public class MealsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
         String temp = (String) req.getSession().getAttribute("email");
         try {
             User user = userDAO.getUserByEmail(temp);
@@ -33,10 +35,14 @@ public class MealsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        String temp = (String) req.getSession().getAttribute("email");
         try {
-            User user = userDAO.getUserByEmail(req.getParameter("email"));
+            User user = userDAO.getUserByEmail(temp);
             List<Meal> mealsList = getAllMealsByUser(user);
             req.setAttribute("list", mealsList);
+            req.getSession().setAttribute("user", user);
         } catch (UserDAOImpl.UserDAOException | MealDao.MealDAOException e) {
             e.printStackTrace();
         }

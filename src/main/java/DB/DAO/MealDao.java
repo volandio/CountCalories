@@ -112,14 +112,37 @@ public class MealDao {
         return meal;
     }
 
+    public static Meal getMealByIdAndUser(User user, int id) throws MealDAOException {
+        Meal meal = null;
+        try {
+            PreparedStatement statement = manager.getConnection().
+                prepareStatement("SELECT * FROM meals WHERE id = ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                LocalDateTime localDateTime = resultSet.getObject("date_time", LocalDateTime.class);
+                meal = new Meal(
+                    id,
+                    user,
+                    localDateTime,
+                    resultSet.getString("description"),
+                    resultSet.getInt("calories")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new MealDAOException();
+        }
+        return meal;
+    }
+
     public static void updateMealById(Meal meal, int id) throws MealDAOException {
         try {
             PreparedStatement statement = manager.getConnection().prepareStatement("UPDATE  meals SET date_time = ?," +
-                " description = ?, calories = ? WHERE id = ?");
+                " description = ?, calories = ? WHERE id = " + id);
             statement.setObject(1, meal.getDateTime());
             statement.setString(2, meal.getDescription());
             statement.setInt(3, meal.getCalories());
-            statement.setInt(4, meal.getIdMeal());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
