@@ -1,6 +1,6 @@
 package services;
 
-import DB.DAO.UserDAOImpl;
+import repository.jdbc.UserDAOImpl;
 import model.User;
 
 import static services.PasswordEncoder.encode;

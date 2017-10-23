@@ -1,7 +1,7 @@
 package services;
 
-import DB.DAO.UserDAOImpl;
+import repository.jdbc.UserDAOException;
 
 public interface AuthorizationService {
-    Boolean auth(String login, String password) throws UserDAOImpl.UserDAOException;
+    Boolean auth(String login, String password) throws UserDAOException;
 }

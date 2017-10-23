@@ -1,7 +1,7 @@
-package DB.DAO;
+package repository.jdbc;
 
-import DB.ConnectionManagerPostgreSQL;
-import DB.IConnectionManager;
+import repository.IConnectionManager;
+import repository.SQLPoolConnection;
 import model.Meal;
 import model.User;
 import org.apache.log4j.Logger;
@@ -15,26 +15,23 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MealDao {
-    public static class MealDAOException extends Exception {
-    }
-
-    private static IConnectionManager manager;
-    private static final Logger logger = Logger.getLogger(MealDao.class);
+public class MealDaoImpl  implements MealDAO {
+    private IConnectionManager manager = new SQLPoolConnection();;
+    private static final Logger logger = Logger.getLogger(MealDaoImpl.class);
 
     static {
-        manager = ConnectionManagerPostgreSQL.getInstance();
+//        manager = ConnectionManagerPostgreSQL.getInstance();
         PropertyConfigurator.configure("D:\\Project\\INNOPOLIS\\CountCalories\\src\\main\\resources\\log4j.properties");
     }
 
-    public static List<Meal> getAllMeals() throws MealDAOException {
+    @Override
+    public List<Meal> getAllMeals() throws MealDAOException {
         List<Meal> mealsList = new ArrayList<>();
         logger.debug("log for getAllMeals");
-        try {
-            Statement statement = manager.getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT u.id id, name, email, password, registered, " +
-                "enabled, calories_per_day, m.id id_meal, user_id, date_time,description, calories FROM users u, " +
-                "meals m WHERE u.id=m.user_id");
+        try (Statement statement = manager.getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT u.id id, name, email, password, registered, " +
+                 "enabled, calories_per_day, m.id id_meal, user_id, date_time,description, calories FROM users u, " +
+                 "meals m WHERE u.id=m.user_id")) {
             while (resultSet.next()) {
                 User user = new User(
                     resultSet.getInt("id"),
@@ -62,13 +59,14 @@ public class MealDao {
         return mealsList;
     }
 
-    public static List<Meal> getAllMealsByUser(User user) throws MealDAOException {
+    @Override
+    public List<Meal> getAllMealsByUser(User user) throws MealDAOException {
         List<Meal> mealsList = new ArrayList<>();
         logger.debug("log for getAllMealsByUser");
-        try {
-            int userId = user.getUserId();
-            Statement statement = manager.getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT id, date_time, description, calories FROM meals WHERE user_id = " + userId);
+        int userId = user.getUserId();
+        try (Statement statement = manager.getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT id, date_time, description, calories FROM meals WHERE user_id = "
+                 + userId + " ORDER BY date_time")) {
             while (resultSet.next()) {
                 LocalDateTime localDateTime = resultSet.getObject("date_time", LocalDateTime.class);
                 Meal meal = new Meal(
@@ -87,14 +85,14 @@ public class MealDao {
         return mealsList;
     }
 
-    public static Meal getMealById(int id) throws MealDAOException {
+    @Override
+    public Meal getMealById(int id) throws MealDAOException {
         Meal meal = null;
         logger.debug("log for getMealById");
-        try {
-            Statement statement = manager.getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT u.id id, name, email, password, registered, " +
-                "enabled, calories_per_day, m.id id_meal, user_id, date_time,description, calories FROM users u, " +
-                "meals m WHERE u.id=m.user_id AND m.id = " + id);
+        try (Statement statement = manager.getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT u.id id, name, email, password, registered, " +
+                 "enabled, calories_per_day, m.id id_meal, user_id, date_time,description, calories FROM users u, " +
+                 "meals m WHERE u.id=m.user_id AND m.id = " + id)) {
             User user = new User(
                 resultSet.getInt("id"),
                 resultSet.getBoolean("enabled"),
@@ -119,12 +117,12 @@ public class MealDao {
         return meal;
     }
 
-    public static Meal getMealByIdAndUser(User user, int id) throws MealDAOException {
+    @Override
+    public Meal getMealByIdAndUser(User user, int id) throws MealDAOException {
         Meal meal = null;
         logger.debug("log for getMealByIdAndUser");
-        try {
-            PreparedStatement statement = manager.getConnection().
-                prepareStatement("SELECT * FROM meals WHERE id = ?");
+        try (PreparedStatement statement = manager.getConnection().
+            prepareStatement("SELECT * FROM meals WHERE id = ?")) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -144,11 +142,11 @@ public class MealDao {
         return meal;
     }
 
-    public static void updateMealById(Meal meal, int id) throws MealDAOException {
+    @Override
+    public void updateMealById(Meal meal, int id) throws MealDAOException {
         logger.debug("log for updateMealById");
-        try {
-            PreparedStatement statement = manager.getConnection().prepareStatement("UPDATE  meals SET date_time = ?," +
-                " description = ?, calories = ? WHERE id = " + id);
+        try (PreparedStatement statement = manager.getConnection().prepareStatement("UPDATE  meals SET date_time = ?," +
+            " description = ?, calories = ? WHERE id = " + id)) {
             statement.setObject(1, meal.getDateTime());
             statement.setString(2, meal.getDescription());
             statement.setInt(3, meal.getCalories());
@@ -159,11 +157,11 @@ public class MealDao {
         }
     }
 
-    public static void updateAllMeals(List<Meal> mealsList) throws MealDAOException {
+    @Override
+    public void updateAllMeals(List<Meal> mealsList) throws MealDAOException {
         logger.debug("log for updateAllMeals");
-        try {
-            PreparedStatement statement = manager.getConnection().prepareStatement("UPDATE  meals SET user_id = ?" +
-                ", date_time = ?, description = ?, calories = ? WHERE id = ?");
+        try (PreparedStatement statement = manager.getConnection().prepareStatement("UPDATE  meals SET user_id = ?" +
+            ", date_time = ?, description = ?, calories = ? WHERE id = ?")) {
             for (Meal meal : mealsList) {
                 statement.setInt(1, meal.getUser().getUserId());
                 statement.setObject(2, meal.getDateTime());
@@ -179,10 +177,10 @@ public class MealDao {
         }
     }
 
-    public static void deleteMealById(int id) throws MealDAOException {
+    @Override
+    public void deleteMealById(int id) throws MealDAOException {
         logger.debug("log for deleteMealById");
-        try {
-            Statement statement = manager.getConnection().createStatement();
+        try (Statement statement = manager.getConnection().createStatement()){
             statement.executeUpdate("DELETE FROM meals WHERE id = " + id);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -190,12 +188,12 @@ public class MealDao {
         }
     }
 
-    public static void insertMeal(Meal meal) throws MealDAOException {
+    @Override
+    public void insertMeal(Meal meal) throws MealDAOException {
         logger.debug("log for insertMeal");
-        try {
-            PreparedStatement statement =
-                manager.getConnection().prepareStatement("INSERT INTO meals (user_id, date_time, description, " +
-                    "calories) VALUES(?, ?, ?, ?)");
+        try (PreparedStatement statement =
+                 manager.getConnection().prepareStatement("INSERT INTO meals (user_id, date_time, description, " +
+                     "calories) VALUES(?, ?, ?, ?)")){
             statement.setInt(1, meal.getUser().getUserId());
             statement.setObject(2, meal.getDateTime());
             statement.setString(3, meal.getDescription());
@@ -207,12 +205,12 @@ public class MealDao {
         }
     }
 
-    public static void insertAllMeals(List<Meal> mealsList) throws MealDAOException {
+    @Override
+    public void insertAllMeals(List<Meal> mealsList) throws MealDAOException {
         logger.debug("log for insertAllMeals");
-        try {
-            PreparedStatement statement =
-                manager.getConnection().prepareStatement("INSERT INTO meals (user_id, date_time, description, " +
-                    "calories) VALUES(?, ?, ?, ?)");
+        try (PreparedStatement statement =
+                 manager.getConnection().prepareStatement("INSERT INTO meals (user_id, date_time, description, " +
+                     "calories) VALUES(?, ?, ?, ?)")){
             for (Meal meal : mealsList) {
                 statement.setInt(1, meal.getUser().getUserId());
                 statement.setObject(2, meal.getDateTime());

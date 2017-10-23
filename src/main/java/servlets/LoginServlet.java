@@ -1,6 +1,6 @@
 package servlets;
 
-import DB.DAO.UserDAOImpl;
+import repository.jdbc.*;
 import services.AuthorizationService;
 import services.AuthorizationServiceImpl;
 
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class LoginServlet extends HttpServlet {
-    private static AuthorizationService as = new AuthorizationServiceImpl();
+    private AuthorizationService as = new AuthorizationServiceImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
             } else {
                 getServletContext().getRequestDispatcher("/").forward(req, resp);
             }
-        } catch (UserDAOImpl.UserDAOException e) {
+        } catch (UserDAOException e) {
             e.printStackTrace();
         }
     }

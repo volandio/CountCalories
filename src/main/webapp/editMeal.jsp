@@ -22,7 +22,7 @@
         <tr>
             <td align="right">Количество калорий в еде :</td>
             <td>
-                <input type="text" name="calories" value="${meal.calories}">
+                <input type="number" name="calories" value="${meal.calories}">
             </td>
         </tr>
         <tr>
