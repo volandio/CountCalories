@@ -1,7 +1,9 @@
-package repository.jdbc;
+package dao.jdbc;
 
 import Jaxb.Meals;
 import Jaxb.Users;
+import dao.exceptions.jdbc.MealDAOException;
+import dao.exceptions.jdbc.UserDAOException;
 import model.Meal;
 import model.User;
 

@@ -1,4 +1,4 @@
-package repository;
+package dao;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -7,6 +7,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class SQLPoolConnection implements IConnectionManager {
+
+    private static final SQLPoolConnection INSTANCE = new SQLPoolConnection();
+    private Connection connection;
 
     private InitialContext ic;
     private DataSource ds;
@@ -21,4 +24,7 @@ public class SQLPoolConnection implements IConnectionManager {
         return ds.getConnection();
     }
 
+    public static synchronized SQLPoolConnection getInstance() {
+        return INSTANCE;
+    }
 }

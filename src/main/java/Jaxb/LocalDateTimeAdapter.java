@@ -1,4 +1,4 @@
-package model;
+package Jaxb;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.time.LocalDateTime;

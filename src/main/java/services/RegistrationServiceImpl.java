@@ -1,6 +1,6 @@
 package services;
 
-import repository.jdbc.UserDAOImpl;
+import dao.jdbc.UserDAOImpl;
 import model.User;
 
 import static services.PasswordEncoder.encode;
@@ -13,6 +13,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (name == null || email == null || password == null) {
             return false;
         }
-        return userDAOImpl.createUser(new User(name, email, encode(password)));
+        User user = new User(name, email, encode(password));
+        user.setEnabled(true);
+        return userDAOImpl.createUser(user);
     }
 }

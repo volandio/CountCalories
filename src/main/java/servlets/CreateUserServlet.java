@@ -1,7 +1,8 @@
 package servlets;
 
+import dao.exceptions.jdbc.UserDAOException;
 import model.User;
-import repository.jdbc.*;
+import dao.jdbc.*;
 import services.RegistrationService;
 import services.RegistrationServiceImpl;
 
@@ -31,7 +32,8 @@ public class CreateUserServlet extends HttpServlet {
                 if (user.getEmail().equals(req.getParameter("email"))) {
                     req.setAttribute("message", "Пользователь с таким Email уже зарегестрирован!");
                     req.getRequestDispatcher("/createUser.jsp").forward(req, resp);
-                    this.destroy();
+                    return;
+//                    this.destroy();
                 }
             }
         } catch (UserDAOException e) {

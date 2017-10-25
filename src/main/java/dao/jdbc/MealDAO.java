@@ -1,5 +1,6 @@
-package repository.jdbc;
+package dao.jdbc;
 
+import dao.exceptions.jdbc.MealDAOException;
 import model.Meal;
 import model.User;
 

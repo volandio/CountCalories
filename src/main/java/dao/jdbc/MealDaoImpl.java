@@ -1,7 +1,9 @@
-package repository.jdbc;
+package dao.jdbc;
 
-import repository.IConnectionManager;
-import repository.SQLPoolConnection;
+import dao.ConnectionManagerPostgreSQL;
+import dao.IConnectionManager;
+import dao.SQLPoolConnection;
+import dao.exceptions.jdbc.MealDAOException;
 import model.Meal;
 import model.User;
 import org.apache.log4j.Logger;
@@ -16,11 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MealDaoImpl  implements MealDAO {
-    private IConnectionManager manager = new SQLPoolConnection();;
+//    private IConnectionManager manager = new SQLPoolConnection();;
+    private static IConnectionManager manager;
     private static final Logger logger = Logger.getLogger(MealDaoImpl.class);
 
     static {
-//        manager = ConnectionManagerPostgreSQL.getInstance();
+        manager = ConnectionManagerPostgreSQL.getInstance();
         PropertyConfigurator.configure("D:\\Project\\INNOPOLIS\\CountCalories\\src\\main\\resources\\log4j.properties");
     }
 

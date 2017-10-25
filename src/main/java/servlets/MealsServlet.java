@@ -1,9 +1,11 @@
 package servlets;
 
+import dao.exceptions.jdbc.MealDAOException;
+import dao.exceptions.jdbc.UserDAOException;
 import model.Meal;
 import model.MealWithExceed;
 import model.User;
-import repository.jdbc.*;
+import dao.jdbc.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,12 +26,14 @@ public class MealsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
-        String temp = (String) req.getSession().getAttribute("email");
+//        int userId = (int) req.getSession().getAttribute("userId");
+        String email = (String) req.getSession().getAttribute("email");
         try {
-            User user = userDAOImpl.getUserByEmail(temp);
+            User user = userDAOImpl.getUserByEmail(email);
             List<Meal> mealsList = mealDaoImpl.getAllMealsByUser(user);
             List<MealWithExceed> mealsWithExceedList = getFilteredWithExceeded(mealsList, LocalTime.of(00, 00),
                 LocalTime.of(23, 59), 2000);
+            req.setAttribute("user", user);
             req.setAttribute("list", mealsWithExceedList);
 //            req.setAttribute("list", mealsList);
         } catch (UserDAOException | MealDAOException e) {
@@ -49,8 +53,10 @@ public class MealsServlet extends HttpServlet {
             if (req.getParameter("maxSumCalories") != null) {
                 int maxSumCalories = Integer.parseInt(req.getParameter("maxSumCalories"));
                 user.setCaloriesPerDay(maxSumCalories);
+                userDAOImpl.updateUserById(user, user.getUserId());
             }
-            req.getSession().setAttribute("user", user);
+//            req.getSession().setAttribute("user", user);
+//            req.getSession().setAttribute("userId", user.getUserId());
             List<Meal> mealsList = mealDaoImpl.getAllMealsByUser(user);
             List<MealWithExceed> mealsWithExceedList = getFilteredWithExceeded(mealsList, LocalTime.of(00, 00),
                 LocalTime.of(23, 59), user.getCaloriesPerDay());

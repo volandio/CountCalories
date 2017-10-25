@@ -1,6 +1,8 @@
 package servlets;
 
-import repository.jdbc.*;
+import dao.exceptions.jdbc.UserDAOException;
+import dao.jdbc.UserDAO;
+import dao.jdbc.UserDAOImpl;
 import services.AuthorizationService;
 import services.AuthorizationServiceImpl;
 
@@ -13,6 +15,7 @@ import java.io.IOException;
 
 public class LoginServlet extends HttpServlet {
     private AuthorizationService as = new AuthorizationServiceImpl();
+    private UserDAO userDAOImpl = new UserDAOImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,6 +26,10 @@ public class LoginServlet extends HttpServlet {
                 HttpSession session = req.getSession();
                 session.setAttribute("email", email);
                 session.setAttribute("isAuth", true);
+                if (userDAOImpl.getUserByEmail(email).getAdmin()) {
+                    req.getRequestDispatcher("/administrator").forward(req, resp);
+                    return;
+                }
                 req.getRequestDispatcher("/meals").forward(req, resp);
 //                resp.sendRedirect("/meals");
             } else {

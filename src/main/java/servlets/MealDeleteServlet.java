@@ -1,6 +1,7 @@
 package servlets;//package servlets;
 
-import repository.jdbc.*;
+import dao.exceptions.jdbc.MealDAOException;
+import dao.jdbc.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

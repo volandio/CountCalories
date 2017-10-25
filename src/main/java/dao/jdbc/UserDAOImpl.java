@@ -1,7 +1,8 @@
-package repository.jdbc;
+package dao.jdbc;
 
-import repository.IConnectionManager;
-import repository.SQLPoolConnection;
+import dao.ConnectionManagerPostgreSQL;
+import dao.IConnectionManager;
+import dao.exceptions.jdbc.UserDAOException;
 import model.User;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -11,11 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
-    private IConnectionManager manager = new SQLPoolConnection();
+//    private static IConnectionManager manager = new SQLPoolConnection();
+    private static IConnectionManager manager;
     private static final Logger logger = Logger.getLogger(MealDaoImpl.class);
 
     static {
-//        manager = ConnectionManagerPostgreSQL.getInstance();
+        manager = ConnectionManagerPostgreSQL.getInstance();
         PropertyConfigurator.configure("D:\\Project\\INNOPOLIS\\CountCalories\\src\\main\\resources\\log4j.properties");
     }
 
@@ -33,7 +35,8 @@ public class UserDAOImpl implements UserDAO {
                     resultSet.getString("email"),
                     resultSet.getString("password"),
                     resultSet.getDate("registered"),
-                    resultSet.getInt("calories_per_day"));
+                    resultSet.getInt("calories_per_day"),
+                    resultSet.getBoolean("admin"));
                 usersList.add(user);
             }
         } catch (SQLException e) {
@@ -41,6 +44,11 @@ public class UserDAOImpl implements UserDAO {
             throw new UserDAOException();
         }
         return usersList;
+    }
+
+    @Override
+    public void changeCaloriesByUser(int userId, int calories) {
+
     }
 
     @Override
@@ -62,6 +70,7 @@ public class UserDAOImpl implements UserDAO {
                     resultSet.getDate("registered"),
                     resultSet.getInt("calories_per_day"));
                 user.setUserId(resultSet.getInt("id"));
+                user.setAdmin(resultSet.getBoolean("admin"));
             }
         } catch (SQLException e) {
             logger.error(e.getMessage());
@@ -95,6 +104,7 @@ public class UserDAOImpl implements UserDAO {
                     resultSet.getDate("registered"),
                     resultSet.getInt("calories_per_day"));
                 user.setUserId(resultSet.getInt("id"));
+                user.setAdmin(resultSet.getBoolean("admin"));
             }
         } catch (SQLException e) {
             logger.error(e.getMessage());
@@ -152,7 +162,7 @@ public class UserDAOImpl implements UserDAO {
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getPassword());
             statement.setDate(4, (Date) user.getRegistered());
-            statement.setBoolean(5, user.getEnabled());
+            statement.setBoolean(5, user.getAdmin());
             statement.setInt(6, user.getCaloriesPerDay());
             statement.setInt(7, id);
             statement.executeUpdate();
@@ -173,7 +183,7 @@ public class UserDAOImpl implements UserDAO {
                 statement.setString(2, user.getEmail());
                 statement.setString(3, user.getPassword());
                 statement.setDate(4, (Date) user.getRegistered());
-                statement.setBoolean(5, user.getEnabled());
+                statement.setBoolean(5, user.getAdmin());
                 statement.setInt(6, user.getCaloriesPerDay());
                 statement.setInt(7, user.getUserId());
                 statement.addBatch();
@@ -206,7 +216,7 @@ public class UserDAOImpl implements UserDAO {
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getPassword());
             statement.setDate(4, new Date((user.getRegistered().getTime())));
-            statement.setBoolean(5, user.getEnabled());
+            statement.setBoolean(5, user.getAdmin());
             statement.setInt(6, user.getCaloriesPerDay());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -226,7 +236,7 @@ public class UserDAOImpl implements UserDAO {
                 statement.setString(2, user.getEmail());
                 statement.setString(3, user.getPassword());
                 statement.setDate(4, new Date((user.getRegistered().getTime())));
-                statement.setBoolean(5, user.getEnabled());
+                statement.setBoolean(5, user.getAdmin());
                 statement.setInt(6, user.getCaloriesPerDay());
                 statement.addBatch();
             }

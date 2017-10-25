@@ -1,5 +1,6 @@
-package repository.jdbc;
+package dao.jdbc;
 
+import dao.exceptions.jdbc.UserDAOException;
 import model.User;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface UserDAO {
     void insertAllUsers(List<User> usersList) throws UserDAOException;
 
     User getUserById(int id) throws UserDAOException;
+
+    void changeCaloriesByUser(int userId, int calories);
 }

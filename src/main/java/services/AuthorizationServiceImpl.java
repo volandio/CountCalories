@@ -1,7 +1,8 @@
 package services;
 
-import repository.jdbc.UserDAOException;
-import repository.jdbc.UserDAOImpl;
+import dao.exceptions.jdbc.UserDAOException;
+import dao.jdbc.UserDAOImpl;
+import model.User;
 
 public class AuthorizationServiceImpl implements AuthorizationService {
     private UserDAOImpl userDAOImpl = new UserDAOImpl();
@@ -11,7 +12,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         if (email == null || password == null) {
             return false;
         }
-        if (userDAOImpl.getUserByLoginAndPassword(email, PasswordEncoder.encode(password)) != null) {
+        User user = userDAOImpl.getUserByLoginAndPassword(email, PasswordEncoder.encode(password));
+        if (user != null) {
             return true;
         }
         return false;
