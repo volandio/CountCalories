@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.7
 -- Dumped by pg_dump version 9.5.7
 
--- Started on 2017-10-19 12:06:08
+-- Started on 2017-10-25 13:03:56
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -17,16 +17,16 @@ SET row_security = off;
 
 --
 -- TOC entry 1 (class 3079 OID 12355)
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2121 (class 0 OID 0)
+-- TOC entry 2122 (class 0 OID 0)
 -- Dependencies: 1
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -60,17 +60,17 @@ ALTER TABLE meals OWNER TO postgres;
 --
 
 CREATE SEQUENCE meals_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 
 
 ALTER TABLE meals_id_seq OWNER TO postgres;
 
 --
--- TOC entry 2122 (class 0 OID 0)
+-- TOC entry 2123 (class 0 OID 0)
 -- Dependencies: 183
 -- Name: meals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -90,7 +90,8 @@ CREATE TABLE users (
     password character varying NOT NULL,
     registered timestamp without time zone DEFAULT now(),
     enabled boolean DEFAULT true,
-    calories_per_day integer DEFAULT 2000 NOT NULL
+    calories_per_day integer DEFAULT 2000 NOT NULL,
+    admin boolean DEFAULT false NOT NULL
 );
 
 
@@ -102,17 +103,17 @@ ALTER TABLE users OWNER TO postgres;
 --
 
 CREATE SEQUENCE users_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 
 
 ALTER TABLE users_id_seq OWNER TO postgres;
 
 --
--- TOC entry 2123 (class 0 OID 0)
+-- TOC entry 2124 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -121,7 +122,7 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- TOC entry 1993 (class 2604 OID 49531)
+-- TOC entry 1994 (class 2604 OID 49531)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -137,7 +138,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 
 --
--- TOC entry 1998 (class 2606 OID 49536)
+-- TOC entry 1999 (class 2606 OID 49536)
 -- Name: meals_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -146,7 +147,7 @@ ALTER TABLE ONLY meals
 
 
 --
--- TOC entry 1996 (class 2606 OID 49525)
+-- TOC entry 1997 (class 2606 OID 49525)
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -155,7 +156,7 @@ ALTER TABLE ONLY users
 
 
 --
--- TOC entry 1994 (class 1259 OID 49559)
+-- TOC entry 1995 (class 1259 OID 49559)
 -- Name: users_email_uindex; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -163,7 +164,7 @@ CREATE UNIQUE INDEX users_email_uindex ON users USING btree (email);
 
 
 --
--- TOC entry 1999 (class 2606 OID 49537)
+-- TOC entry 2000 (class 2606 OID 49537)
 -- Name: meals_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -172,7 +173,7 @@ ALTER TABLE ONLY meals
 
 
 --
--- TOC entry 2120 (class 0 OID 0)
+-- TOC entry 2121 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -183,7 +184,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2017-10-19 12:06:08
+-- Completed on 2017-10-25 13:03:57
 
 --
 -- PostgreSQL database dump complete
