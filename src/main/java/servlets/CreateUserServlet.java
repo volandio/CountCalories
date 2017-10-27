@@ -33,7 +33,6 @@ public class CreateUserServlet extends HttpServlet {
                     req.setAttribute("message", "Пользователь с таким Email уже зарегестрирован!");
                     req.getRequestDispatcher("/createUser.jsp").forward(req, resp);
                     return;
-//                    this.destroy();
                 }
             }
         } catch (UserDAOException e) {

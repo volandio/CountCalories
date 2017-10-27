@@ -23,7 +23,6 @@ public class MealEditServlet extends HttpServlet {
         String email = (String) req.getSession().getAttribute("email");
         try {
             User user = userDaoImpl.getUserByEmail(email);
-//            User user = (User) req.getSession().getAttribute("user");
             req.setAttribute("meal", mealDaoImpl.getMealByIdAndUser(user, Integer.parseInt(req.getParameter("id"))));
         } catch (MealDAOException | UserDAOException e) {
             e.printStackTrace();
@@ -38,7 +37,6 @@ public class MealEditServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         String email = (String) req.getSession().getAttribute("email");
         try {
-//            User user = (User) req.getSession().getAttribute("user");
             User user = userDaoImpl.getUserByEmail(email);
             Meal meal = new Meal(user, LocalDateTime.parse(req.getParameter("dateTime")),
                 req.getParameter("description"), Integer.parseInt(req.getParameter("calories")));
@@ -46,7 +44,6 @@ public class MealEditServlet extends HttpServlet {
         } catch (MealDAOException | UserDAOException e) {
             e.printStackTrace();
         }
-//        req.getRequestDispatcher("/meals").forward(req, resp);
         resp.sendRedirect("/meals");
 
     }

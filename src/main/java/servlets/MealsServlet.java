@@ -26,7 +26,6 @@ public class MealsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
-//        int userId = (int) req.getSession().getAttribute("userId");
         String email = (String) req.getSession().getAttribute("email");
         try {
             User user = userDAOImpl.getUserByEmail(email);
@@ -35,7 +34,6 @@ public class MealsServlet extends HttpServlet {
                 LocalTime.of(23, 59), 2000);
             req.setAttribute("user", user);
             req.setAttribute("list", mealsWithExceedList);
-//            req.setAttribute("list", mealsList);
         } catch (UserDAOException | MealDAOException e) {
             e.printStackTrace();
         }
@@ -55,14 +53,11 @@ public class MealsServlet extends HttpServlet {
                 user.setCaloriesPerDay(maxSumCalories);
                 userDAOImpl.updateUserById(user, user.getUserId());
             }
-//            req.getSession().setAttribute("user", user);
-//            req.getSession().setAttribute("userId", user.getUserId());
             List<Meal> mealsList = mealDaoImpl.getAllMealsByUser(user);
             List<MealWithExceed> mealsWithExceedList = getFilteredWithExceeded(mealsList, LocalTime.of(00, 00),
                 LocalTime.of(23, 59), user.getCaloriesPerDay());
             req.setAttribute("user", user);
             req.setAttribute("list", mealsWithExceedList);
-//            req.setAttribute("list", mealsList);
         } catch (UserDAOException | MealDAOException e) {
             e.printStackTrace();
         }

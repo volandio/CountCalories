@@ -13,8 +13,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (name == null || email == null || password == null) {
             return false;
         }
-//        User user = new User(name, email, encode(password));
-//        user.setEnabled(true);
         return userDAOImpl.createUser(new User(name, email, encode(password)));
     }
 }

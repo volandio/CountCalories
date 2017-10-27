@@ -211,7 +211,7 @@ public class UserDAOImpl implements UserDAO {
         logger.debug("log for insertUser");
         try (PreparedStatement statement =
                  manager.getConnection().prepareStatement("INSERT INTO users (name, email, password, " +
-                     "registered, admin, calories_per_day, enabled) VALUES(?, ?, ?, ?, ?, ?, ?)")) {
+                     "registered, enabled, calories_per_day, enabled) VALUES(?, ?, ?, ?, ?, ?, ?)")) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getPassword());

@@ -31,7 +31,6 @@ public class LoginServlet extends HttpServlet {
                     return;
                 }
                 req.getRequestDispatcher("/meals").forward(req, resp);
-//                resp.sendRedirect("/meals");
             } else {
                 getServletContext().getRequestDispatcher("/").forward(req, resp);
             }

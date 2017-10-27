@@ -28,7 +28,6 @@ public class MealCreateServlet extends HttpServlet {
         } catch (UserDAOException e) {
             e.printStackTrace();
         }
-//        User user = (User) req.getSession().getAttribute("user");
         Meal meal = new Meal(user, LocalDateTime.parse(req.getParameter("dateTime")),
             req.getParameter("description"), Integer.parseInt(req.getParameter("calories")));
         try {
@@ -37,6 +36,5 @@ public class MealCreateServlet extends HttpServlet {
             e.printStackTrace();
         }
         req.getRequestDispatcher("/meals").forward(req, resp);
-//        resp.sendRedirect(String.format(req.getContextPath(), "/meals"));
     }
 }

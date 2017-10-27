@@ -19,7 +19,6 @@ public class MealDeleteServlet extends HttpServlet {
         } catch (MealDAOException e) {
             e.printStackTrace();
         }
-//        resp.sendRedirect(String.format(req.getContextPath(), "meals"));
         req.getRequestDispatcher("/meals").forward(req, resp);
     }
 }
